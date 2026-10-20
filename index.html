@@ -1,0 +1,359 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#080d1b">
+
+    <title>HalluciCheck | LLM Evaluation Lab</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+<div class="app">
+
+    <aside class="sidebar">
+        <a href="#dashboard" class="brand">
+            <div class="brand-icon">H<span>.</span></div>
+            <div>
+                <strong>HalluciCheck</strong>
+                <small>LLM EVALUATION LAB</small>
+            </div>
+        </a>
+
+        <div class="nav-title">WORKSPACE</div>
+
+        <a class="nav-link active" href="#dashboard">▦ <span>Overview</span></a>
+        <a class="nav-link" href="#experiment">⌕ <span>New Experiment</span></a>
+        <a class="nav-link" href="#comparison">⇄ <span>Compare Models</span></a>
+        <a class="nav-link" href="#analytics">◫ <span>Analytics</span></a>
+        <a class="nav-link" href="#history">◷ <span>Experiment History</span></a>
+
+        <div class="sidebar-spacer"></div>
+
+        <div class="project-card">
+            <div class="project-symbol">✳</div>
+            <strong>Research Project</strong>
+            <p>Evaluating LLM Hallucination</p>
+            <span class="demo-badge">FRONTEND DEMO</span>
+        </div>
+
+        <div class="user-card">
+            <div class="avatar">AI</div>
+            <div>
+                <strong>Researcher</strong>
+                <small>Evaluation workspace</small>
+            </div>
+            <span>•••</span>
+        </div>
+    </aside>
+
+    <main class="main" id="dashboard">
+
+        <header class="topbar">
+            <div class="breadcrumb">Workspace <span>/</span> Overview</div>
+
+            <div class="top-actions">
+                <span class="live-indicator">● Demo environment</span>
+                <button class="icon-button" id="themeToggle" title="Toggle theme">☼</button>
+            </div>
+        </header>
+
+        <section class="welcome">
+            <div>
+                <div class="eyebrow"><span></span> RESEARCH DASHBOARD</div>
+                <h1>LLM Hallucination <span>Evaluation</span></h1>
+                <p>
+                    Investigate factual accuracy. Compare language model responses
+                    with and without retrieval support.
+                </p>
+            </div>
+
+            <button class="primary-button" onclick="scrollToExperiment()">
+                <span>＋</span> New evaluation
+            </button>
+        </section>
+
+        <div class="notice">
+            <span>ⓘ</span>
+            <div>
+                <strong>Frontend demonstration mode</strong>
+                <p>Scores and responses are illustrative examples, not measured model performance.</p>
+            </div>
+        </div>
+
+        <section class="metrics-grid">
+            <article class="metric-card">
+                <div class="metric-top">
+                    <span>Total evaluations</span>
+                    <div class="metric-icon violet">▦</div>
+                </div>
+                <h2 id="totalEvaluations">0</h2>
+                <p class="metric-caption">Questions tested this session</p>
+            </article>
+
+            <article class="metric-card">
+                <div class="metric-top">
+                    <span>Without retrieval</span>
+                    <div class="metric-icon pink">◈</div>
+                </div>
+                <h2 id="withoutScore">--</h2>
+                <p class="metric-caption">Average factual accuracy</p>
+            </article>
+
+            <article class="metric-card">
+                <div class="metric-top">
+                    <span>With retrieval</span>
+                    <div class="metric-icon cyan">⌘</div>
+                </div>
+                <h2 id="withScore">--</h2>
+                <p class="metric-caption">Average factual accuracy</p>
+            </article>
+
+            <article class="metric-card">
+                <div class="metric-top">
+                    <span>Accuracy difference</span>
+                    <div class="metric-icon green">↗</div>
+                </div>
+                <h2 id="improvement">--</h2>
+                <p class="metric-caption">Percentage-point difference</p>
+            </article>
+        </section>
+
+        <section class="panel experiment-panel" id="experiment">
+            <div class="panel-header">
+                <div>
+                    <div class="eyebrow">EXPERIMENT CONFIGURATION</div>
+                    <h2>Run an evaluation</h2>
+                    <p>Enter a question and select your evaluation settings.</p>
+                </div>
+                <span class="step-label">STEP 01 / 03</span>
+            </div>
+
+            <label for="question">Research question</label>
+            <textarea id="question" rows="3"
+                placeholder="Example: What is the capital of Australia?"></textarea>
+
+            <div class="form-grid">
+                <div class="field">
+                    <label for="model">Model under evaluation</label>
+                    <select id="model">
+                        <option value="Generic LLM">Generic LLM (Demo)</option>
+                        <option value="Research Model A">Research Model A (Demo)</option>
+                        <option value="Research Model B">Research Model B (Demo)</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="dataset">Evaluation dataset</label>
+                    <select id="dataset">
+                        <option value="General Knowledge">General Knowledge</option>
+                        <option value="Science">Science</option>
+                        <option value="Technology">Technology</option>
+                        <option value="History">History</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="metric">Scoring method</label>
+                    <select id="metric">
+                        <option value="Factual Accuracy">Factual Accuracy</option>
+                        <option value="Evidence Consistency">Evidence Consistency</option>
+                        <option value="Answer Relevance">Answer Relevance</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="experiment-footer">
+                <p>◉ Both conditions will use the same question.</p>
+                <button class="primary-button" id="evaluateButton" onclick="evaluateQuestion()">
+                    Run evaluation <span>→</span>
+                </button>
+            </div>
+
+            <p id="message" class="message" role="status"></p>
+        </section>
+
+        <section class="comparison-section" id="comparison">
+            <div class="section-title">
+                <div>
+                    <div class="eyebrow">SIDE-BY-SIDE ANALYSIS</div>
+                    <h2>Response comparison</h2>
+                </div>
+                <span class="neutral-badge">SAME QUESTION · TWO CONDITIONS</span>
+            </div>
+
+            <div class="comparison-grid">
+
+                <article class="panel response-panel">
+                    <div class="response-heading">
+                        <div class="response-icon violet">LLM</div>
+                        <div>
+                            <h3>Without Retrieval</h3>
+                            <p>Parametric knowledge only</p>
+                        </div>
+                        <span class="condition-dot violet-dot"></span>
+                    </div>
+
+                    <div class="response-body" id="withoutAnswer">
+                        <div class="empty-response">
+                            <span>◈</span>
+                            <p>Waiting for an evaluation</p>
+                            <small>Your sample response will appear here.</small>
+                        </div>
+                    </div>
+
+                    <div class="response-footer">
+                        <div>
+                            <span>Factual accuracy</span>
+                            <strong id="withoutAccuracy">--</strong>
+                        </div>
+                        <div class="score-track">
+                            <div class="score-fill violet-fill" id="withoutBar"></div>
+                        </div>
+                        <p>No reference documents provided.</p>
+                    </div>
+                </article>
+
+                <article class="panel response-panel">
+                    <div class="response-heading">
+                        <div class="response-icon cyan">RAG</div>
+                        <div>
+                            <h3>With Retrieval</h3>
+                            <p>Reference-supported response</p>
+                        </div>
+                        <span class="condition-dot cyan-dot"></span>
+                    </div>
+
+                    <div class="response-body" id="withAnswer">
+                        <div class="empty-response">
+                            <span>⌘</span>
+                            <p>Waiting for an evaluation</p>
+                            <small>Your sample response will appear here.</small>
+                        </div>
+                    </div>
+
+                    <div class="response-footer">
+                        <div>
+                            <span>Factual accuracy</span>
+                            <strong id="withAccuracy">--</strong>
+                        </div>
+                        <div class="score-track">
+                            <div class="score-fill cyan-fill" id="withBar"></div>
+                        </div>
+                        <p>Retrieval support is simulated in this demo.</p>
+                    </div>
+                </article>
+
+            </div>
+        </section>
+
+        <section class="analytics-grid" id="analytics">
+
+            <article class="panel chart-panel">
+                <div class="panel-header">
+                    <div>
+                        <div class="eyebrow">PERFORMANCE INSIGHTS</div>
+                        <h2>Accuracy comparison</h2>
+                        <p>Illustrative scores from the current session.</p>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <canvas id="accuracyChart"></canvas>
+                </div>
+            </article>
+
+            <article class="panel insight-panel">
+                <div class="eyebrow">EXPERIMENT INSIGHTS</div>
+                <h2>What the results mean</h2>
+
+                <div class="insight-item">
+                    <span class="insight-number violet">01</span>
+                    <div>
+                        <strong>Without retrieval</strong>
+                        <p>The model answers using its learned knowledge and the supplied prompt.</p>
+                    </div>
+                </div>
+
+                <div class="insight-item">
+                    <span class="insight-number cyan">02</span>
+                    <div>
+                        <strong>With retrieval</strong>
+                        <p>The model can use relevant reference information to support its answer.</p>
+                    </div>
+                </div>
+
+                <div class="insight-item">
+                    <span class="insight-number green">03</span>
+                    <div>
+                        <strong>Compare factuality</strong>
+                        <p>Evaluate both answers against the same verified reference facts.</p>
+                    </div>
+                </div>
+
+                <div class="insight-callout">
+                    <strong>Research note</strong>
+                    <p>Retrieval may improve factual grounding, but it does not guarantee correctness.</p>
+                </div>
+            </article>
+
+        </section>
+
+        <section class="panel history-panel" id="history">
+            <div class="panel-header">
+                <div>
+                    <div class="eyebrow">SESSION RECORDS</div>
+                    <h2>Evaluation history</h2>
+                    <p>Review questions and compare their scores.</p>
+                </div>
+                <button class="secondary-button" onclick="exportHistory()">↓ Export CSV</button>
+            </div>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Question</th>
+                            <th>Model</th>
+                            <th>Without retrieval</th>
+                            <th>With retrieval</th>
+                            <th>Difference</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyBody">
+                        <tr>
+                            <td colspan="5" class="empty-state">
+                                No evaluations yet. Run your first experiment above.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="history-footer">
+                <span id="historyCount">0 records</span>
+                <button class="text-button" onclick="clearHistory()">Clear session</button>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <div><strong>HalluciCheck</strong> · Academic Research Prototype</div>
+            <div>LLM Hallucination Evaluation · Frontend Only</div>
+        </footer>
+
+    </main>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
+```
